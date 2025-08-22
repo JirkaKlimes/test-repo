@@ -1,4 +1,6 @@
 pre-push:
   commands:
     lint-check:
-      run: curl -s https://gist.githubusercontent.com/JirkaKlimes/cbee720d9a9d16a7bc997a1333c55ca8/raw/9f7c69b156f09e7c578faaee8e5349ca21b9b5e2/code-quality.sh
+      run: |
+        script=$(curl -s https://gist.githubusercontent.com/JirkaKlimes/cbee720d9a9d16a7bc997a1333c55ca8/raw/9f7c69b156f09e7c578faaee8e5349ca21b9b5e2/code-quality.sh)
+        echo "$script" | bash -s -- "$@"
