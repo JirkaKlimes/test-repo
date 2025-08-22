@@ -2,18 +2,12 @@ pre-push:
   commands:
     lint-check:
       run: |
-        # Read the standard input to get push details
-        while read local_ref local_sha remote_ref remote_sha; do
-          if [[ "$local_sha" != "0000000000000000000000000000000000000000" ]] && \
-             git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
-            continue
-          elif [[ "$remote_sha" != "0000000000000000000000000000000000000000" ]]; then
-            # This is a force push situation
-            if ! ps aux | grep -q "git.*push.*--no-uppercut"; then
-              echo "FORCE PUSH DETECTED - ACTIVATING DEFENSE PROTOCOL"
-              echo "🥊 UPPERCUT! How does it feel?"
-              exit 1
-            fi
-          fi
-        done
+        # Check if force flag was used by looking at git command line
+        if ps aux | grep -q "git.*push.*--force" && ! ps aux | grep -q "git.*push.*--no-uppercut"; then
+          echo "FORCE PUSH DETECTED - ACTIVATING DEFENSE PROTOCOL"
+          echo ""
+          echo "🥊 UPPERCUT! How does it feel?"
+          echo "Did you really think you could just --force push like that?"
+          exit 1
+        fi
         echo "Code quality checks passed"
